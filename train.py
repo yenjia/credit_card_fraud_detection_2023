@@ -80,7 +80,7 @@ def load_preprocessing_data(input):
 
     return data, train_df, test_df
 
-def train(n_estimators=300, seed=0, save_dir=None):
+def train(n_estimators=300, seed=0, save_dir=None, device="cuda:0"):
     """
     Train an XGBoost classifier and choose a threshold based on F1 score.
 
@@ -103,25 +103,26 @@ def train(n_estimators=300, seed=0, save_dir=None):
         random_state=seed, 
         shuffle=True
     )
-    model = xgb_model(n_estimators=n_estimators)
+    model = xgb_model(n_estimators=n_estimators, device=device)
     model.fit(X_train, y_train, eval_set=[(X_train, y_train), (X_val, y_val)])
     
     prob = model.predict_proba(X_val)
     thr = select_thr_f1(y_val, prob[:, 1], mode="balanced")
 
     if save_dir is not None:
-        model.save_model(os.path.join(save_dir, "submit_model_{seed}.json"))
+        model.save_model(os.path.join(save_dir, f"submit_model_{seed}.json"))
 
     return model, thr
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("-i", "--input", default="", help="Preprocessing csv")
+    parser.add_argument("-i", "--input", default="output/preprocessing.csv", help="Preprocessing csv")
     parser.add_argument("--model_output_dir", default=None, help="Model output directory")
-    parser.add_argument("--thr_path", default=None, help="Save thr path")
-    parser.add_argument("-e", "--epochs", default=300, \
+    parser.add_argument("--thr_path", default="config/thr_test.json", help="Save thr path")
+    parser.add_argument("-e", "--epochs", default=300, type=int,\
                         help="Number of epochs for a model")
-    parser.add_argument("--runs", default=3, help="Number of models (for ensemble)")
+    parser.add_argument("--runs", default=3, type=int, help="Number of models (for ensemble)")
+    parser.add_argument("--gpu", default=0, help="Number of device")
     args = parser.parse_args()
 
     print("Loading and preprocessing the tables ...")
@@ -133,8 +134,10 @@ if __name__ == '__main__':
         model, thr = train(
             n_estimators=args.epochs, 
             seed=i, 
-            save_dir=args.model_output_dir
+            save_dir=args.model_output_dir,
+            device=f"cuda:{args.gpu}"
         )
+        thrs.append(float(thr))
     
     # save thresholds for inference
     json.dump(thrs, open(args.thr_path, "w"), indent=4)
