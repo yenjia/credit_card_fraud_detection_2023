@@ -4,7 +4,7 @@ from tqdm import tqdm
 import numpy as np
 import pandas as pd
 
-def add_columns(df, keys, set=""):
+def add_columns(df, keys, csv_set=""):
     """
     Add missing columns to a DataFrame and set a new column "set" to the specified value.
 
@@ -16,14 +16,14 @@ def add_columns(df, keys, set=""):
     Returns:
         pandas.DataFrame: Updated DataFrame with missing columns added and "set" column set.
     """
+    
+    print(f"Preparing {csv_set} ...")
+    create_col = list(set(keys) - set(df.columns))
 
-    existing_col = list(df.columns)
+    empty_table = pd.DataFrame(columns=create_col)
+    df = pd.concat([df, empty_table], axis=1)
 
-    for key in keys:
-        if key not in existing_col:
-            df[key] = pd.Series()
-
-    df["set"] = set
+    df["set"] = csv_set
 
     return df[keys]
 
@@ -57,6 +57,16 @@ numerical = [
 ]   
 
 def categorical_preprocessing(data):
+    """
+    Perform categorical preprocessing on the data.
+
+    Args:
+        data (pd.DataFrame): DataFrame containing the data to be preprocessed.
+
+    Returns:
+        pd.DataFrame: Preprocessed DataFrame with additional features.
+    """
+    
     for i in tqdm(categories):
         data[i] = data[i].fillna(-1)
         data[f"mode_group_{i}"] = data["cano"].map(data.groupby("cano")[i].agg(lambda x: x.value_counts().idxmax()))
@@ -67,6 +77,16 @@ def categorical_preprocessing(data):
     return data
 
 def numerical_preprocessing(data):
+    """
+    Perform numerical preprocessing on the data.
+
+    Args:
+        data (pd.DataFrame): DataFrame containing the data to be preprocessed.
+
+    Returns:
+        pd.DataFrame: Preprocessed DataFrame with additional features.
+    """
+
     for i in tqdm(numerical):
         data[i] = data[i].fillna(-1)
         data[f"normd_group_{i}"] = (data[i] - data.groupby("cano")[i].transform("min")) \
@@ -87,14 +107,15 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     # Get the list of required columns
-    keys = json.load(open("config/columns_keys.json"))
+    keys = json.load(open("../config/columns_keys.json"))
 
     # Load training and test data
-    training = add_columns(pd.read_csv("tables/training.csv"), keys, "training")
-    public_test = add_columns(pd.read_csv("tables/public.csv"), keys, "public_test")
-    private = add_columns(pd.read_csv("tables/public.csv"), keys, "private")
+    training = add_columns(pd.read_csv("../tables/training.csv"), keys, "training")
+    public_test = add_columns(pd.read_csv("../tables/public.csv"), keys, "public_test")
+    private = add_columns(pd.read_csv("../tables/private.csv"), keys, "private")
 
-    data = pd.concat([training, public_test, private]).reset_index(drop=True)
+    print("Concat ...")
+    data = pd.concat([training, public_test, private], ignore_index=True)
 
     print("Preprocessing ...")
     # Count the number of "cano" and "txkey" under the group "chid"
