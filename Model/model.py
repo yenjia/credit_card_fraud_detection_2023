@@ -5,7 +5,7 @@ from sklearn.metrics import f1_score
 
 def f1_eval(y_true, y_pred, thr=0.5):
     """
-    Evaluates the F1 score for binary classification using a specified threshold.
+    Evaluate the F1 score for binary classification using a specified threshold.
 
     Args:
         y_true (np.ndarray): Ground truth labels.
