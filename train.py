@@ -138,5 +138,3 @@ if __name__ == '__main__':
     
     # save thresholds for inference
     json.dump(thrs, open(args.thr_path, "w"), indent=4)
-
-    
