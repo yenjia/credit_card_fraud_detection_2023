@@ -1,7 +1,7 @@
 # credit_card_fraud_detection_2023
 AI CUP 2023 玉山人工智慧公開挑戰賽－信用卡冒用偵測
 
-This method achieved 6th position on the private leaderboard (TEAM_4043).
+This method achieved 7th position on the private leaderboard (TEAM_4043).
 
 ## Introduction
 **There is no new idea in this method**. Just calculated some rule-based features (basic statistics) and classified them by XGBoost classifier.
