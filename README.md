@@ -48,3 +48,40 @@ python inference_submit.py \
     --output submission.csv
 ```
 **Note:** After inference, you must merge the "txkey" of the example submission file to get the correct submission.
+
+## Final Competition (2023.12.02)
+All the code can be found in the `final_code` directory
+
+**Step 1:** Preprocessing. Use `training csv` provided before the final competition, `private_1.csv` and `private_2_processed.csv` to calculate basic statistics for the "cano" and "chid" groups as features. These files should be placed in the `table` directory.
+
+However, the CPU performance is insufficient to complete all the preprocessing. So we only transform on some essential features.
+
+```bash=
+cd final_code
+
+python preprocess_numerical.py -o output/preprocessing_final.csv
+```
+
+**Step2:** Since the environment of the final competition is no GPU, we change the device of XGBoost classifier to "cpu". Also, you need to turn off the parameters `subsample` and `sampling_method` in `model.py` first because they are available only on GPU.
+
+
+```
+python train_numerical.py \
+    --input ../output/preprocessing_final.csv \
+    --model_output_dir  ../output/checkpoints/ \
+    --thr_path thr_final.json \
+    --epochs 100 \
+    --runs 3 \
+    --gpu cpu
+```
+
+**Step3:** Inference
+```bash=
+python inference_numerical.py \
+    --input ../output/preprocessing_final.csv \
+    --thrs thr_final.json \
+    --ckpts ../output/checkpoints/ \
+    --output submission.csv
+```
+
+After step 3, you must merge the "txkey" of the example submission file to get the correct submission.
