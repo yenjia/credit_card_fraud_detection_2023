@@ -52,17 +52,17 @@ python inference_submit.py \
 ## Final Competition (2023.12.02)
 All the code can be found in the `final_code` directory
 
-**Step 1:** Preprocessing. Use `training csv` provided before the final competition, `private_1.csv` and `private_2_processed.csv` to calculate basic statistics for the "cano" and "chid" groups as features. These files should be placed in the `table` directory.
+**Step 1:** Preprocessing. Use `training.csv` provided before the final competition, `private_1.csv` and `private_2_processed.csv` to calculate basic statistics for the "cano" and "chid" groups as features. These files should be placed in the `tables` directory.
 
-However, the CPU performance is insufficient to complete all the preprocessing. So we only transform on some essential features.
+However, the CPU performance is insufficient to complete all the preprocessing. So we only transform some essential features (Only including the transformed features of numerical features).
 
 ```bash=
 cd final_code
 
-python preprocess_numerical.py -o output/preprocessing_final.csv
+python preprocess_numerical.py -o ../output/preprocessing_final.csv
 ```
 
-**Step2:** Since the environment of the final competition is no GPU, we change the device of XGBoost classifier to "cpu". Also, you need to turn off the parameters `subsample` and `sampling_method` in `model.py` first because they are available only on GPU.
+**Step2:** Since the environment of the final competition is no GPU, we change the device of XGBoost classifier to "cpu". Also, you must first turn off the parameters `subsample` and `sampling_method` in `model.py` because they are only available on GPU.
 
 
 ```
@@ -75,7 +75,7 @@ python train_numerical.py \
     --gpu cpu
 ```
 
-**Step3:** Inference
+**Step3:** Inference (ensemble 3 models)
 ```bash=
 python inference_numerical.py \
     --input ../output/preprocessing_final.csv \
@@ -84,4 +84,4 @@ python inference_numerical.py \
     --output submission.csv
 ```
 
-After step 3, you must merge the "txkey" of the example submission file to get the correct submission.
+**Note:** After step 3, you must merge the "txkey" of the example submission file to get the correct submission.
