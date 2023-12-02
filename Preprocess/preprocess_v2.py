@@ -117,8 +117,9 @@ if __name__ == '__main__':
 
     # Load training and test data
     training = add_columns(pd.read_csv("../tables/training.csv"), keys, "training")
-    public_test = add_columns(pd.read_csv("../tables/public.csv"), keys, "public_test")
-    private = add_columns(pd.read_csv("../tables/private.csv"), keys, "private")
+    training = training[training["set"] != "private"]
+    public_test = add_columns(pd.read_csv("../tables/private_1.csv"), keys, "public_test")
+    private = add_columns(pd.read_csv("../tables/private_2_processed.csv"), keys, "private")
 
     print("Concat ...")
     data = pd.concat([training, public_test, private], ignore_index=True)
