@@ -2,6 +2,7 @@
 AI CUP 2023 玉山人工智慧公開挑戰賽－信用卡冒用偵測
 
 This method achieved 7th position on the private leaderboard (TEAM_4043).
+
 Final competition slide [[link](https://docs.google.com/presentation/d/1VdH3zyurjtmtQTlQ-H9O0Q6yRWlqe6c4/edit?usp=drive_link&ouid=103785507326024132087&rtpof=true&sd=true)]
 
 ## Introduction
