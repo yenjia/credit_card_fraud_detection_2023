@@ -11,7 +11,7 @@ Final competition slide [[link](https://docs.google.com/presentation/d/1VdH3zyur
 **Note:** I have not optimized the process. The processing steps are very time-consuming and consume a lot of memory (>50GB). To proceed, ensure you have a good CPU, GPU, and sufficient RAM.
 
 ## Preprocessing Data and Checkpoints
-The preprocessing data and checkpoints are available in this [Google Drive](https://drive.google.com/drive/folders/1DlS1KMmyNBieRmKBHtb5FlXjPhyk75uE?usp=sharing).
+The preprocessing data and checkpoints are not available now. If you need the checkpoints, please contact me.
 * Preprocessing table: ~14 GB
 * XGBoost models: ~400 MB per model
 
