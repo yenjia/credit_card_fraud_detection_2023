@@ -105,6 +105,6 @@ def xgb_model(n_estimators=300, device="cuda:0"):
         verbosity=1,
         eval_metric=f1_eval,
         importance_type="cover",
-        radom_state=0,
+        random_state=0,
     )
     return model
